@@ -1,6 +1,17 @@
 [
-  { "username": "admin", "password": "123", "role": "ADMINISTRADOR" },
-  { "username": "doc", "password": "123", "role": "DOCTOR" },
-  { "username": "vend", "password": "123", "role": "VENDEDOR" },
-  { "username": "cli", "password": "123", "role": "CLIENTE" }
+  {
+    "username": "admin",
+    "password": "123",
+    "role": "ADMINISTRADOR"
+  },
+  {
+    "username": "entrenador",
+    "password": "123",
+    "role": "ENTRENADOR"
+  },
+  {
+    "username": "cliente",
+    "password": "123",
+    "role": "CLIENTE"
+  }
 ]
