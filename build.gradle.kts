@@ -2,7 +2,7 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(ktorLibs.plugins.ktor)
-    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.serialization) version "1.9.20"
 }
 
 group = "com.kaloo"
