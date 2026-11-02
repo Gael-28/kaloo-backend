@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.kaloo.ServerTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-31T03:22:51.011Z" hostname="JESUS" time="3.557">
+  <properties/>
+  <testcase name="test root endpoint" classname="com.kaloo.ServerTest" time="3.545"/>
+  <system-out><![CDATA[2026-10-30 21:22:53.985 [DefaultDispatcher-worker-2 @call-context#3] INFO  io.ktor.test - No ktor.deployment.watch patterns specified, automatic reload is not active.
+2026-10-30 21:22:54.330 [DefaultDispatcher-worker-2 @call-context#3] INFO  io.ktor.test - Application started in 0.395 seconds.
+2026-10-30 21:22:54.337 [DefaultDispatcher-worker-1 @coroutine#5] INFO  io.ktor.test - Responding at http://localhost:80
+2026-10-30 21:22:54.338 [DefaultDispatcher-worker-1 @coroutine#5] INFO  io.ktor.test - Responding at https://localhost:443
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
