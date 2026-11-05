@@ -7,3 +7,4 @@ ktor:
       - com.kaloo.HttpKt.configureHttp
       - com.kaloo.SerializationKt.configureSerialization
       - com.kaloo.RoutingKt.configureRouting
+      - com.kaloo.admin.AdminRoutesKt.configureAdminRoutes
