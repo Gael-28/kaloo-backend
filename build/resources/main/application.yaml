@@ -7,3 +7,5 @@ ktor:
       - com.kaloo.HttpKt.configureHttp
       - com.kaloo.SerializationKt.configureSerialization
       - com.kaloo.RoutingKt.configureRouting
+gemini:
+  apiKey: "AQ.Ab8RN6JmL0cH_DPqQoIXdrpDo75T-oTf-NPNPK-ywUrXxd9UQw"

@@ -39,12 +39,16 @@ data class ApiResponse(val success: Boolean, val message: String)
 
 // --- Enrutamiento ---
 fun Application.configureRouting() {
+    // Obtener la API Key desde application.yaml
+    val apiKey = environment.config.propertyOrNull("gemini.apiKey")?.getString() ?: ""
+    val geminiService = GeminiService(apiKey)
+
     routing {
         get("/") {
             call.respondText("Servidor Ktor ProyectoGym Activo")
         }
 
-        // Endpoint de Inicio de Sesión
+        // Endpoint: Login
         post("/login") {
             val req = call.receive<LoginRequest>()
             when {
@@ -63,47 +67,44 @@ fun Application.configureRouting() {
             }
         }
 
-        // Endpoint: Nutrición e IMC
+        // Endpoint: Nutrición con IA Real
         post("/api/nutrition") {
             val req = call.receive<NutritionRequest>()
             val heightM = req.height / 100f
             val bmi = req.weight / (heightM * heightM)
-            val recommendation = when {
-                bmi < 18.5f -> "Bajo peso: Incrementa la ingesta calórica con carbohidratos complejos y proteína."
-                bmi in 18.5f..24.9f -> "Peso saludable: Mantén balance calórico y 2g de proteína por kg."
-                bmi in 25.0f..29.9f -> "Sobrepeso: Realiza un ligero déficit calórico y ajusta carbohidratos."
-                else -> "Obesidad: Mantén déficit calórico moderado, consumo de fibra y buena hidratación."
-            }
-            call.respond(NutritionResponse(bmi = bmi, recommendation = recommendation))
+
+            val prompt = """
+                Actúa como un nutriólogo deportivo profesional.
+                El usuario pesa ${req.weight} kg, mide ${req.height} cm y tiene un IMC de $bmi.
+                Proporciona un consejo nutricional personalizado y conciso (máximo 3 oraciones), 
+                incluyendo distribución de macronutrientes recomendada.
+            """.trimIndent()
+
+            val aiRecommendation = geminiService.generateContent(prompt)
+
+            call.respond(NutritionResponse(bmi = bmi, recommendation = aiRecommendation))
         }
 
-        // Endpoint: Recomendación de Ejercicios
+        // Endpoint: Ejercicios con IA Real
         post("/api/exercises") {
             val req = call.receive<ExerciseRequest>()
-            val goalLower = req.goal.lowercase()
-            val routine = when {
-                goalLower.contains("fuerza") || goalLower.contains("masa") -> listOf(
-                    "Sentadilla libre con barra - 4 series x 8-10 reps",
-                    "Press de banca plano - 4 series x 8 reps",
-                    "Remo con barra inclinado - 4 series x 10 reps",
-                    "Press militar con mancuernas - 3 series x 12 reps"
-                )
-                goalLower.contains("grasa") || goalLower.contains("perder") -> listOf(
-                    "Circuito HIIT en caminadora - 20 minutos",
-                    "Zancadas con mancuernas - 4 series x 15 reps por pierna",
-                    "Kettlebell Swings - 4 series x 20 reps",
-                    "Plancha abdominal - 4 series x 45 segundos"
-                )
-                else -> listOf(
-                    "Calentamiento articular - 10 minutos",
-                    "Circuito general fullbody - 3 series x 12 reps",
-                    "Estiramientos estáticos - 10 minutos"
-                )
-            }
-            call.respond(ExerciseResponse(goal = req.goal, routine = routine))
+
+            val prompt = """
+                Actúa como un entrenador personal experto de gimnasio.
+                El usuario tiene el siguiente objetivo: '${req.goal}'.
+                Genera una lista exacta de 4 ejercicios recomendados con series y repeticiones.
+                Devuelve únicamente los ejercicios en líneas separadas sin introducciones ni viñetas.
+            """.trimIndent()
+
+            val rawResponse = geminiService.generateContent(prompt)
+            val routineList = rawResponse.lines()
+                .map { it.replace("*", "").trim() }
+                .filter { it.isNotBlank() }
+
+            call.respond(ExerciseResponse(goal = req.goal, routine = routineList))
         }
 
-        // Endpoint: Mensaje a Entrenador
+        // Endpoint: Mensajes a Entrenador
         post("/api/coaches/message") {
             val req = call.receive<CoachMessageRequest>()
             call.respond(ApiResponse(success = true, message = "Mensaje enviado exitosamente al entrenador '${req.coachName}'."))
