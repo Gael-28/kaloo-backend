@@ -1,9 +1,0 @@
-ktor:
-  deployment:
-    port: 8080
-    host: 0.0.0.0
-  application:
-    modules:
-      - com.kaloo.HttpKt.configureHttp
-      - com.kaloo.SerializationKt.configureSerialization
-      - com.kaloo.RoutingKt.configureRouting

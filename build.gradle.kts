@@ -23,6 +23,7 @@ dependencies {
     implementation(ktorLibs.server.core)
     implementation(ktorLibs.server.cors)
     implementation(libs.logback.classic)
+    implementation("com.microsoft.sqlserver:mssql-jdbc:12.6.1.jre11")
 
     testImplementation(kotlin("test"))
     testImplementation(ktorLibs.server.testHost)

@@ -1,35 +1,60 @@
-# backend
+# Kaloo Backend (Ktor + SQL Server)
 
-This project was created using the [Ktor Project Generator](https://start.ktor.io).
+Backend Ktor (CIO) separado del frontend Android. Carpetas:
 
-Here are some useful links to get you started:
- * [Ktor Documentation](https://ktor.io/docs/home.html)
- * [Ktor GitHub page](https://github.com/ktorio/ktor)
- * [Ktor Slack chat](https://app.slack.com/client/T09229ZC6/C0A974TJ9). [Request an invite](https://surveys.jetbrains.com/s3/kotlin-slack-sign-up).
+- `C:\Users\Kevin GM\Documents\kaloo-backend` ← este proyecto (backend)
+- `C:\Users\Kevin GM\Documents\kaloo-frontend` ← frontend Android Studio / KMP (`androidApp/`, `shared/`)
 
+## Estructura de paquetes
 
-## Features
-Here's a list of features included in this project:
-
-| Name | Description |
-|------|-------------|
-| [Content Negotiation](https://start.ktor.io/p/io.ktor/server-content-negotiation) | Provides automatic content conversion according to Content-Type and Accept headers |
-| [kotlinx.serialization](https://start.ktor.io/p/io.ktor/server-kotlinx-serialization) | Handles JSON serialization using kotlinx.serialization library |
-| [CORS](https://start.ktor.io/p/io.ktor/server-cors) | Enables Cross-Origin Resource Sharing (CORS) |
-
-
-## Building & Running
-To build or run the project, use one of the following tasks:
-
-
-| Task | Description |
-|------|-------------|
-| `./gradlew test`    | Run the tests     |
-| `./gradlew build`   | Build the project |
-| `./gradlew run`     | Run the server    |
-
-If the server starts successfully, you'll see the following output:
 ```
-2024-12-04 14:32:45.584 [main] INFO  Application - Application started in 0.303 seconds.
-2024-12-04 14:32:45.682 [main] INFO  Application - Responding at http://0.0.0.0:8080
+src/main/kotlin/com/kaloo/
+├── Application.kt          # module() + main() — punto de entrada
+├── plugins/                # plugins Ktor (Http = CORS, Serialization = JSON)
+│   ├── Http.kt
+│   └── Serialization.kt
+├── config/                 # configuración (SQL Server vía JDBC)
+│   ├── AppConfig.kt        # env: HOST, PORT, DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD
+│   └── Database.kt         # DriverManager + mssql-jdbc, healthCheck()
+├── models/                 # DTOs serializables
+│   ├── User.kt
+│   ├── Auth.kt             # LoginRequest / AuthResponse
+│   ├── Nutrition.kt        # NutritionRequest / NutritionResponse (IMC)
+│   ├── Exercise.kt         # ExerciseRequest / ExerciseResponse
+│   ├── Coach.kt            # CoachMessageRequest / ApiResponse
+│   └── Establishment.kt    # Establishment / AdminPanelResponse
+├── routes/                 # endpoints HTTP
+│   ├── Routing.kt          # GET / + agrega módulos
+│   ├── AuthRoutes.kt       # POST /login
+│   ├── NutritionRoutes.kt  # POST /api/nutrition
+│   ├── ExerciseRoutes.kt   # POST /api/exercises
+│   ├── CoachRoutes.kt      # POST /api/coaches/message
+│   └── AdminRoutes.kt      # /api/admin/panel, /api/admin/establishment
+├── repositories/           # acceso a datos (memoria / users.json → SQL Server)
+│   ├── UserRepository.kt
+│   └── EstablishmentRepository.kt
+└── services/               # lógica de negocio
+    ├── AuthService.kt
+    ├── NutritionService.kt # cálculo IMC
+    ├── ExerciseService.kt  # recomendación por objetivo
+    └── CoachService.kt
+```
+
+## Flujo de una petición
+
+`Route (routes/)` → `Service (services/)` → `Repository (repositories/)` → `Database (config/)` → SQL Server.
+
+Los modelos (`models/`) son los DTOs JSON que usa el frontend Android (Ktor Client).
+
+## SQL Server
+
+Driver JDBC: `com.microsoft.sqlserver:mssql-jdbc:12.6.1.jre11` (ver `build.gradle.kts`).
+Configuración por variables de entorno (ver `config/AppConfig.kt`) o `database/` para scripts `.sql`.
+
+## Arranque
+
+```powershell
+cd C:\Users\Kevin GM\Documents\kaloo-backend
+.\gradlew.bat run     # http://0.0.0.0:8080
+.\gradlew.bat test    # tests de ServerTest y AdminRoutesTest
 ```
