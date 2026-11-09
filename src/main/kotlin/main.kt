@@ -13,7 +13,6 @@ import org.jetbrains.exposed.sql.insert
 fun main() {
     DatabaseFactory.init()
 
-    // 1. Crear tabla users e insertar usuario admin si no existe
     transaction {
         SchemaUtils.create(UsersTable)
 
@@ -35,7 +34,6 @@ fun main() {
 
     val port = System.getenv("PORT")?.toIntOrNull() ?: 8080
 
-    // 2. Iniciar servidor Netty
     embeddedServer(Netty, port = port, host = "0.0.0.0") {
         install(ContentNegotiation) {
             json()
