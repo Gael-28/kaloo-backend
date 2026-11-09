@@ -10,9 +10,20 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.http.*
 import kotlinx.serialization.Serializable
+import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.and
 
 @Serializable
-data class User(val username: String, val password: String, val role: String)
+data class LoginRequest(val username: String, val password: String)
+
+@Serializable
+data class AuthResponse(
+    val success: Boolean,
+    val username: String? = null,
+    val role: String? = null,
+    val message: String? = null
+)
 
 fun main() {
     // 1. Inicializar conexión a PostgreSQL en Railway
@@ -29,8 +40,30 @@ fun main() {
 
         routing {
             post("/login") {
-                // Aquí irá la validación con la base de datos
-                call.respond(HttpStatusCode.OK, mapOf("status" to "ok"))
+                val request = call.receive<LoginRequest>()
+
+                // Consulta real a la tabla 'users' en PostgreSQL
+                val userFound = transaction {
+                    UsersTable.selectAll()
+                        .where { (UsersTable.username eq request.username) and (UsersTable.password eq request.password) }
+                        .map {
+                            AuthResponse(
+                                success = true,
+                                username = it[UsersTable.username],
+                                role = it[UsersTable.role]
+                            )
+                        }
+                        .singleOrNull()
+                }
+
+                if (userFound != null) {
+                    call.respond(HttpStatusCode.OK, userFound)
+                } else {
+                    call.respond(
+                        HttpStatusCode.OK,
+                        AuthResponse(success = false, message = "Credenciales incorrectas")
+                    )
+                }
             }
         }
     }.start(wait = true)
