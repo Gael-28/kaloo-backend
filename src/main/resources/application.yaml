@@ -6,6 +6,7 @@ ktor:
     modules:
       - com.kaloo.backend.HttpKt.configureHttp
       - com.kaloo.backend.SerializationKt.configureSerialization
+      - com.kaloo.backend.DatabasesKt.configureDatabases
       - com.kaloo.backend.RoutingKt.configureRouting
       - com.kaloo.backend.ExtrasKt.configureExtras
 gemini:
