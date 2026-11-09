@@ -41,11 +41,14 @@ fun main() {
         routing {
             post("/login") {
                 val request = call.receive<LoginRequest>()
+                val cleanUsername = request.username.trim()
+                val cleanPassword = request.password.trim()
 
-                // Consulta real a la tabla 'users' en PostgreSQL
+                println("--> Intento de login: usuario='$cleanUsername', password='$cleanPassword'")
+
                 val userFound = transaction {
                     UsersTable.selectAll()
-                        .where { (UsersTable.username eq request.username) and (UsersTable.password eq request.password) }
+                        .where { (UsersTable.username eq cleanUsername) and (UsersTable.password eq cleanPassword) }
                         .map {
                             AuthResponse(
                                 success = true,
@@ -55,6 +58,8 @@ fun main() {
                         }
                         .singleOrNull()
                 }
+
+                println("<-- Resultado BD: $userFound")
 
                 if (userFound != null) {
                     call.respond(HttpStatusCode.OK, userFound)
