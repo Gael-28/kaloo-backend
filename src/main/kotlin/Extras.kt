@@ -1,4 +1,4 @@
-package com.kaloo
+package com.kaloo.backend
 
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -14,6 +14,13 @@ import java.io.File
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.UUID
+
+// ---------- Modelo genérico de respuesta ----------
+@Serializable
+data class ApiResponse(
+    val success: Boolean,
+    val message: String? = null
+)
 
 // ---------- Modelos: racha ----------
 @Serializable
