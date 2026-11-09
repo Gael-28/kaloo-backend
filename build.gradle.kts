@@ -30,4 +30,18 @@ dependencies {
     implementation("io.ktor:ktor-client-core")
     implementation("io.ktor:ktor-client-cio")
     implementation("io.ktor:ktor-client-content-negotiation")
+    // PostgreSQL & HikariCP
+    implementation("org.postgresql:postgresql:42.7.2")
+    implementation("com.zaxxer:HikariCP:5.1.0")
+    // Exposed ORM
+    implementation("org.jetbrains.exposed:exposed-core:0.48.0")
+    implementation("org.jetbrains.exposed:exposed-dao:0.48.0")
+    implementation("org.jetbrains.exposed:exposed-jdbc:0.48.0")
+    // Motor Netty de Ktor
+    implementation("io.ktor:ktor-server-netty:2.3.10")
+
+    // Content Negotiation y JSON para Ktor
+    implementation("io.ktor:ktor-server-content-negotiation:2.3.10")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.10")
+
 }
