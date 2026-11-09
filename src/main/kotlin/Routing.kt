@@ -28,9 +28,6 @@ fun Application.configureRouting() {
             val cleanUser = request.username.trim()
             val cleanPass = request.password.trim()
 
-            println("=========================================")
-            println(">>> INTENTO LOGIN EN ROUTING: user='$cleanUser' pass='$cleanPass'")
-
             val userFound = transaction {
                 UsersTable.selectAll()
                     .where { (UsersTable.username eq cleanUser) and (UsersTable.password eq cleanPass) }
@@ -43,9 +40,6 @@ fun Application.configureRouting() {
                     }
                     .singleOrNull()
             }
-
-            println("<<< RESULTADO BD: $userFound")
-            println("=========================================")
 
             if (userFound != null) {
                 call.respond(HttpStatusCode.OK, userFound)
