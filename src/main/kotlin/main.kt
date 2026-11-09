@@ -26,13 +26,11 @@ data class AuthResponse(
 )
 
 fun main() {
-    // 1. Inicializar conexión a PostgreSQL en Railway
+    // Inicializar BD
     DatabaseFactory.init()
 
-    // 2. Puerto dinámico para Railway
     val port = System.getenv("PORT")?.toIntOrNull() ?: 8080
 
-    // 3. Servidor Ktor único
     embeddedServer(Netty, port = port, host = "0.0.0.0") {
         install(ContentNegotiation) {
             json()
@@ -41,14 +39,15 @@ fun main() {
         routing {
             post("/login") {
                 val request = call.receive<LoginRequest>()
-                val cleanUsername = request.username.trim()
-                val cleanPassword = request.password.trim()
+                val cleanUser = request.username.trim()
+                val cleanPass = request.password.trim()
 
-                println("--> Intento de login: usuario='$cleanUsername', password='$cleanPassword'")
+                println("=========================================")
+                println("PETICION RECIBIDA: user='$cleanUser' pass='$cleanPass'")
 
                 val userFound = transaction {
                     UsersTable.selectAll()
-                        .where { (UsersTable.username eq cleanUsername) and (UsersTable.password eq cleanPassword) }
+                        .where { (UsersTable.username eq cleanUser) and (UsersTable.password eq cleanPass) }
                         .map {
                             AuthResponse(
                                 success = true,
@@ -59,7 +58,8 @@ fun main() {
                         .singleOrNull()
                 }
 
-                println("<-- Resultado BD: $userFound")
+                println("RESULTADO EN BD: $userFound")
+                println("=========================================")
 
                 if (userFound != null) {
                     call.respond(HttpStatusCode.OK, userFound)
