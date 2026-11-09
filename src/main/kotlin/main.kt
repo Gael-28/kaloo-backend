@@ -11,12 +11,17 @@ import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
-
 @Serializable
 data class User(val username: String, val password: String, val role: String)
 
 fun main() {
-    embeddedServer(CIO, port = 8080, host = "0.0.0.0") {
+    // Lee el puerto asignado dinámicamente por Railway (o usa 8080 por defecto en local)
+    val port = System.getenv("PORT")?.toInt() ?: 8080
+
+    // Si en el futuro conectas PostgreSQL, puedes leer la URL así:
+    val databaseUrl = System.getenv("DATABASE_URL")
+
+    embeddedServer(CIO, port = port, host = "0.0.0.0") {
         install(ContentNegotiation) { json() }
 
         routing {
