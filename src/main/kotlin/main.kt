@@ -26,7 +26,6 @@ data class AuthResponse(
 )
 
 fun main() {
-    // Inicializar BD
     DatabaseFactory.init()
 
     val port = System.getenv("PORT")?.toIntOrNull() ?: 8080
@@ -42,8 +41,7 @@ fun main() {
                 val cleanUser = request.username.trim()
                 val cleanPass = request.password.trim()
 
-                println("=========================================")
-                println("PETICION RECIBIDA: user='$cleanUser' pass='$cleanPass'")
+                println(">>> INTENTO LOGIN: user='$cleanUser' pass='$cleanPass'")
 
                 val userFound = transaction {
                     UsersTable.selectAll()
@@ -58,8 +56,7 @@ fun main() {
                         .singleOrNull()
                 }
 
-                println("RESULTADO EN BD: $userFound")
-                println("=========================================")
+                println("<<< RESULTADO BD: $userFound")
 
                 if (userFound != null) {
                     call.respond(HttpStatusCode.OK, userFound)
