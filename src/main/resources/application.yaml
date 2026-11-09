@@ -4,10 +4,10 @@ ktor:
     host: 0.0.0.0
   application:
     modules:
-      - com.kaloo.HttpKt.configureHttp
-      - com.kaloo.SerializationKt.configureSerialization
-      - com.kaloo.RoutingKt.configureRouting
-      - com.kaloo.ExtrasKt.configureExtras
+      - com.kaloo.backend.HttpKt.configureHttp
+      - com.kaloo.backend.SerializationKt.configureSerialization
+      - com.kaloo.backend.RoutingKt.configureRouting
+      - com.kaloo.backend.ExtrasKt.configureExtras
 gemini:
   gemini:
     apiKey: "${GEMINI_API_KEY:TU_API_KEY_AQUI}"
