@@ -1,4 +1,4 @@
-package com.kaloo
+package com.kaloo.backend
 
 import io.ktor.server.application.*
 import io.ktor.http.*
