@@ -13,6 +13,8 @@ import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.insert
 
 @Serializable
 data class LoginRequest(val username: String, val password: String)
@@ -27,6 +29,26 @@ data class AuthResponse(
 
 fun main() {
     DatabaseFactory.init()
+
+    // 1. Crear tabla si no existe e insertar usuario admin inicial
+    transaction {
+        SchemaUtils.create(UsersTable)
+
+        val userExists = UsersTable.selectAll()
+            .where { UsersTable.username eq "admin" }
+            .count() > 0
+
+        if (!userExists) {
+            UsersTable.insert {
+                it[username] = "admin"
+                it[password] = "1234"
+                it[role] = "ADMIN"
+            }
+
+            println(">>> USUARIO 'admin' CREADO EN LA BASE DE DATOS")
+
+        }
+    }
 
     val port = System.getenv("PORT")?.toIntOrNull() ?: 8080
 
