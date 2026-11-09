@@ -1,5 +1,4 @@
-package com.kaloo
-
+package com.kaloo.backend
 import io.ktor.server.application.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.plugins.contentnegotiation.*
