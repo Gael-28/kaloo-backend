@@ -1,60 +1,39 @@
--- Kaloo - SQL Server (crear base y tablas)
--- Ejecutar en SSMS o sqlcmd contra tu instancia.
-IF DB_ID('KalooDb') IS NULL CREATE DATABASE KalooDb;
-GO
-USE KalooDb;
-GO
+-- Kaloo - PostgreSQL (Railway)
+-- Puedes ejecutar esto en Railway Query o psql. El backend también crea estas tablas al iniciar.
 
-IF OBJECT_ID('dbo.Users', 'U') IS NULL
-CREATE TABLE dbo.Users (
-    Id INT IDENTITY(1,1) PRIMARY KEY,
-    Username NVARCHAR(100) NOT NULL UNIQUE,
-    Password NVARCHAR(255) NOT NULL,
-    Role NVARCHAR(50) NOT NULL -- ADMINISTRADOR | ENTRENADOR | CLIENTE
+CREATE TABLE IF NOT EXISTS establishments (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    address TEXT NOT NULL,
+    phone TEXT NOT NULL DEFAULT '',
+    email TEXT NOT NULL DEFAULT '',
+    opening_hours TEXT NOT NULL DEFAULT '',
+    description TEXT,
+    manager_name TEXT NOT NULL DEFAULT '',
+    manager_phone TEXT NOT NULL DEFAULT '',
+    lost_and_found_note TEXT
 );
-GO
 
-IF OBJECT_ID('dbo.Establishments', 'U') IS NULL
-CREATE TABLE dbo.Establishments (
-    Id INT IDENTITY(1,1) PRIMARY KEY,
-    Name NVARCHAR(200) NOT NULL,
-    Address NVARCHAR(500) NOT NULL,
-    Phone NVARCHAR(50),
-    Email NVARCHAR(200),
-    OpeningHours NVARCHAR(200),
-    Description NVARCHAR(MAX),
-    ManagerName NVARCHAR(200),
-    ManagerPhone NVARCHAR(50),
-    LostAndFoundNote NVARCHAR(MAX)
+CREATE TABLE IF NOT EXISTS user_streaks (
+    username TEXT PRIMARY KEY,
+    current_streak INT NOT NULL DEFAULT 0,
+    longest_streak INT NOT NULL DEFAULT 0,
+    total_check_ins INT NOT NULL DEFAULT 0,
+    last_check_in DATE
 );
-GO
 
--- Migración: si la tabla ya existía, agregar las columnas nuevas
-IF COL_LENGTH('dbo.Establishments', 'ManagerPhone') IS NULL
-ALTER TABLE dbo.Establishments ADD ManagerPhone NVARCHAR(50);
-IF COL_LENGTH('dbo.Establishments', 'ManagerName') IS NULL
-ALTER TABLE dbo.Establishments ADD ManagerName NVARCHAR(200);
-IF COL_LENGTH('dbo.Establishments', 'LostAndFoundNote') IS NULL
-ALTER TABLE dbo.Establishments ADD LostAndFoundNote NVARCHAR(MAX);
-GO
-
--- Rama "Racha": asistencias / racha por usuario
-IF OBJECT_ID('dbo.UserStreaks', 'U') IS NULL
-CREATE TABLE dbo.UserStreaks (
-    Id INT IDENTITY(1,1) PRIMARY KEY,
-    Username NVARCHAR(100) NOT NULL UNIQUE,
-    CurrentStreak INT NOT NULL DEFAULT 0,
-    LongestStreak INT NOT NULL DEFAULT 0,
-    TotalCheckIns INT NOT NULL DEFAULT 0,
-    LastCheckIn DATE NULL
+CREATE TABLE IF NOT EXISTS lost_items (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL DEFAULT '',
+    image_base64 TEXT,
+    date_found DATE,
+    status TEXT NOT NULL DEFAULT 'ENCONTRADO'
 );
-GO
 
--- Datos de ejemplo (mismos usuarios de users.json)
-IF NOT EXISTS (SELECT 1 FROM dbo.Users WHERE Username = 'admin')
-INSERT INTO dbo.Users (Username, Password, Role) VALUES ('admin','123','ADMINISTRADOR');
-IF NOT EXISTS (SELECT 1 FROM dbo.Users WHERE Username = 'entrenador')
-INSERT INTO dbo.Users (Username, Password, Role) VALUES ('entrenador','123','ENTRENADOR');
-IF NOT EXISTS (SELECT 1 FROM dbo.Users WHERE Username = 'cliente')
-INSERT INTO dbo.Users (Username, Password, Role) VALUES ('cliente','123','CLIENTE');
-GO
+-- Datos iniciales (opcionales)
+INSERT INTO establishments (name, address, phone, email, opening_hours, description, manager_name, manager_phone, lost_and_found_note)
+SELECT 'Kaloo Gym', 'Calle Ejemplo 123', '555-0100', 'contacto@kaloo.example',
+       'Lun a Vie 06:00-22:00, Sáb 08:00-14:00', 'Establecimiento deportivo',
+       'Gerente Kaloo', '555-0111', 'Para checar objetos perdidos, llama al gerente en horario del establecimiento.'
+WHERE NOT EXISTS (SELECT 1 FROM establishments);
