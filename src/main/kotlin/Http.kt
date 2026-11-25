@@ -15,7 +15,7 @@ fun Application.configureHttp() {
         allowHeader(HttpHeaders.ContentType)
         allowHeader(HttpHeaders.Authorization)
 
-        allowHost("tu-dominio-frontend.up.railway.app", schemes = listOf("kaloo-frontend-production.up.railway.app"))
+        allowHost("kaloo-frontend-production.up.railway.app", schemes = listOf("https"))
         allowHost("localhost:8080")
     }
 }
