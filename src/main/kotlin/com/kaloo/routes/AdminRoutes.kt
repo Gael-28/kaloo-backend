@@ -18,6 +18,9 @@ import io.ktor.server.routing.*
  * En este apartado se visualizarA y gestionarA la informaciOn
  * del establecimiento.
  */
+/**
+ * Hola soy dana
+ */
 fun Application.configureAdminRoutes() {
     routing {
         route("/api/admin") {
