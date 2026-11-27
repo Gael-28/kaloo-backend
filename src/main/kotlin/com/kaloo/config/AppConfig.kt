@@ -3,7 +3,7 @@ package com.kaloo.config
 import java.net.URI
 
 /**
- * Configuración central de la aplicación.
+ * ConfiguraciOn central de la aplicaciOn.
  * Soporta Railway PostgreSQL mediante DATABASE_URL o variables PG* / DB_*.
  */
 object AppConfig {

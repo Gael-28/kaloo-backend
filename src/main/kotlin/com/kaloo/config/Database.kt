@@ -5,7 +5,7 @@ import java.sql.Connection
 import java.sql.DriverManager
 
 /**
- * Acceso a PostgreSQL vía JDBC (compatible con Railway).
+ * Acceso a PostgreSQL vIa JDBC (compatible con Railway).
  */
 object Database {
 
@@ -58,12 +58,14 @@ object Database {
                         id SERIAL PRIMARY KEY,
                         name TEXT NOT NULL,
                         description TEXT NOT NULL DEFAULT '',
+                        color TEXT,
                         image_base64 TEXT,
                         date_found DATE,
                         status TEXT NOT NULL DEFAULT 'ENCONTRADO'
                     )
                     """.trimIndent()
                 )
+                st.execute("ALTER TABLE lost_items ADD COLUMN IF NOT EXISTS color TEXT")
             }
 
             conn.prepareStatement("SELECT COUNT(*) FROM establishments").use { ps ->
@@ -80,7 +82,7 @@ object Database {
                             ins.setString(2, "Calle Ejemplo 123")
                             ins.setString(3, "555-0100")
                             ins.setString(4, "contacto@kaloo.example")
-                            ins.setString(5, "Lun a Vie 06:00-22:00, Sáb 08:00-14:00")
+                            ins.setString(5, "Lun a Vie 06:00-22:00, SAb 08:00-14:00")
                             ins.setString(6, "Establecimiento deportivo")
                             ins.setString(7, "Gerente Kaloo")
                             ins.setString(8, "555-0111")
@@ -96,19 +98,19 @@ object Database {
                     if (rs.next() && rs.getInt(1) == 0) {
                         conn.prepareStatement(
                             """
-                            INSERT INTO lost_items (name, description, image_base64, date_found, status)
-                            VALUES (?, ?, ?, ?, ?)
+                            INSERT INTO lost_items (name, description, color, image_base64, date_found, status)
+                            VALUES (?, ?, ?, ?, ?, ?)
                             """.trimIndent()
                         ).use { ins ->
                             val samples = listOf(
-                                arrayOf("Mancuerna", "Mancuerna encontrada en zona de pesas.", "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAA4SURBVDhPY/jw4cN/SvCoAUgGZGZmwjGyAmSMTQ1WAxoaGrBiZDXD3QCYGDrGpgZuALl41IAP/wH3Lna6uuiI8AAAAABJRU5ErkJggg==", "2026-11-20", "ENCONTRADO"),
-                                arrayOf("Disco de barra", "Disco de peso encontrado cerca de racks.", "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABfSURBVDhPzc9BCkAhCIThrustPLI3KCYY8Jlu8i1a/Itw+KBhZrNKRHbZjT0KqOqOAN8obg/AjzMA+f0HiMMKQP8BHN3WB9pfeAtAflQBfn8AiMMMiNsUYASyG2sCNhcHRxWylAslpwAAAABJRU5ErkJggg==", "2026-11-22", "ENCONTRADO"),
-                                arrayOf("Toalla deportiva", "Toalla gris encontrada en vestidores.", "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAA+SURBVDhPY/jw4cN/SjB1DWhoaCAKI+uhjQFfv37FiulrwMqVK1EwyQZgw6MGkGAAIYysh7oGkIMpNODDfwDJL2/uXZ7RYgAAAABJRU5ErkJggg==", "2026-11-24", "ENCONTRADO")
+                                arrayOf("Mancuerna", "Mancuerna encontrada en zona de pesas.", "Negro", "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAA4SURBVDhPY/jw4cN/SvCoAUgGZGZmwjGyAmSMTQ1WAxoaGrBiZDXD3QCYGDrGpgZuALl41IAP/wH3Lna6uuiI8AAAAABJRU5ErkJggg==", "2026-11-20", "ENCONTRADO"),
+                                arrayOf("Disco de barra", "Disco de peso encontrado cerca de racks.", "Gris", "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABfSURBVDhPzc9BCkAhCIThrustPLI3KCYY8Jlu8i1a/Itw+KBhZrNKRHbZjT0KqOqOAN8obg/AjzMA+f0HiMMKQP8BHN3WB9pfeAtAflQBfn8AiMMMiNsUYASyG2sCNhcHRxWylAslpwAAAABJRU5ErkJggg==", "2026-11-22", "ENCONTRADO"),
+                                arrayOf("Toalla deportiva", "Toalla gris encontrada en vestidores.", "Gris", "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAA+SURBVDhPY/jw4cN/SjB1DWhoaCAKI+uhjQFfv37FiulrwMqVK1EwyQZgw6MGkGAAIYysh7oGkIMpNODDfwDJL2/uXZ7RYgAAAABJRU5ErkJggg==", "2026-11-24", "ENCONTRADO")
                             )
                             for (s in samples) {
-                                ins.setString(1, s[0]); ins.setString(2, s[1]); ins.setString(3, s[2])
-                                ins.setDate(4, java.sql.Date.valueOf(s[3]))
-                                ins.setString(5, s[4])
+                                ins.setString(1, s[0]); ins.setString(2, s[1]); ins.setString(3, s[2]); ins.setString(4, s[3])
+                                ins.setDate(5, java.sql.Date.valueOf(s[4]))
+                                ins.setString(6, s[5])
                                 ins.executeUpdate()
                             }
                         }

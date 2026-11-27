@@ -5,8 +5,8 @@ import com.kaloo.models.LoginRequest
 import com.kaloo.repositories.UserRepository
 
 /**
- * Lógica de inicio de sesión por roles.
- * Extraída del endpoint /login que estaba duplicado en main.kt y Routing.kt.
+ * LOgica de inicio de sesiOn por roles.
+ * ExtraIda del endpoint /login que estaba duplicado en main.kt y Routing.kt.
  */
 object AuthService {
 

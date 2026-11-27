@@ -3,7 +3,7 @@ package com.kaloo.services
 import com.kaloo.models.ApiResponse
 import com.kaloo.models.CoachMessageRequest
 
-/** Mensajería con entrenadores (placeholder: acá irá la BD / push). */
+/** MensajerIa con entrenadores (placeholder: acA irA la BD / push). */
 object CoachService {
 
     fun sendMessage(request: CoachMessageRequest): ApiResponse =

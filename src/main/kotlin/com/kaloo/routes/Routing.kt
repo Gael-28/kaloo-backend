@@ -6,7 +6,7 @@ import io.ktor.server.routing.*
 
 /**
  * Punto de entrada de rutas.
- * Registra el endpoint raíz y delega en los grupos por módulo.
+ * Registra el endpoint raIz y delega en los grupos por mOdulo.
  * (Este archivo reemplaza al antiguo Routing.kt de com.kaloo)
  */
 fun Application.configureRouting() {

@@ -2,7 +2,7 @@ package com.kaloo.models
 
 import kotlinx.serialization.Serializable
 
-/** Rama "Racha": días consecutivos de asistencia/entrenamiento. */
+/** Rama "Racha": dIas consecutivos de asistencia/entrenamiento. */
 @Serializable
 data class UserStreak(
     val username: String,
@@ -16,7 +16,7 @@ data class UserStreak(
 @Serializable
 data class CheckInRequest(
     val username: String,
-    // GPS opcional (para validar que está en el gimnasio)
+    // GPS opcional (para validar que estA en el gimnasio)
     val latitude: Double? = null,
     val longitude: Double? = null
 )

@@ -4,7 +4,7 @@ import com.kaloo.models.CheckInRequest
 import com.kaloo.models.UserStreak
 import com.kaloo.repositories.StreakRepository
 
-/** Lógica de la rama "Racha". */
+/** LOgica de la rama "Racha". */
 object StreakService {
 
     fun getStreak(username: String): UserStreak =
@@ -12,7 +12,7 @@ object StreakService {
 
     fun checkIn(request: CheckInRequest): UserStreak {
         require(request.username.isNotBlank()) { "username requerido" }
-        // TODO(GPS): validar latitude/longitude contra la ubicación del gimnasio
+        // TODO(GPS): validar latitude/longitude contra la ubicaciOn del gimnasio
         return StreakRepository.checkIn(request.username.trim())
     }
 }

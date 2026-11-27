@@ -7,7 +7,7 @@ import kotlinx.serialization.json.Json
  * Repositorio de usuarios.
  *
  * Por ahora lee src/main/resources/users.json (mismo comportamiento
- * que tenía main.kt). Cuando exista SQL Server, reemplazar por
+ * que tenIa main.kt). Cuando exista SQL Server, reemplazar por
  * consultas JDBC a la tabla Users.
  */
 object UserRepository {
@@ -33,7 +33,7 @@ object UserRepository {
         }
     }
 
-    /** Busca un usuario por usuario + contraseña (login por roles). */
+    /** Busca un usuario por usuario + contraseNa (login por roles). */
     fun findByCredentials(username: String, password: String): User? =
         loadUsers().find { it.username == username && it.password == password }
 }

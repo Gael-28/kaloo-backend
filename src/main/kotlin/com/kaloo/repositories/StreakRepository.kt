@@ -12,6 +12,16 @@ object StreakRepository {
 
     private val memory = ConcurrentHashMap<String, UserStreak>()
 
+    fun listAll(): List<UserStreak> = runCatching {
+        Database.connect().use { conn ->
+            conn.prepareStatement(
+                "SELECT username, current_streak, longest_streak, total_check_ins, last_check_in FROM user_streaks ORDER BY current_streak DESC, username ASC"
+            ).use { ps ->
+                ps.executeQuery().use { rs -> buildList { while (rs.next()) add(rs.toStreak()) } }
+            }
+        }
+    }.getOrElse { memory.values.sortedByDescending { it.currentStreak } }
+
     fun get(username: String): UserStreak = runCatching {
         Database.connect().use { conn ->
             conn.prepareStatement(
@@ -51,8 +61,8 @@ object StreakRepository {
                     lastCheckIn = todayStr,
                     message = when {
                         last == today -> "Ya registraste tu asistencia de hoy."
-                        newStreak > 1 -> "¡Racha de $newStreak días! Sigue así."
-                        else -> "Primer día de tu racha. ¡Vamos!"
+                        newStreak > 1 -> "Racha de $newStreak dIas! Sigue asI."
+                        else -> "Primer dIa de tu racha. Vamos!"
                     }
                 )
 
@@ -108,8 +118,8 @@ object StreakRepository {
             lastCheckIn = todayStr,
             message = when {
                 last == today -> "Ya registraste tu asistencia de hoy."
-                newStreak > 1 -> "¡Racha de $newStreak días! Sigue así."
-                else -> "Primer día de tu racha. ¡Vamos!"
+                newStreak > 1 -> "Racha de $newStreak dIas! Sigue asI."
+                else -> "Primer dIa de tu racha. Vamos!"
             }
         )
     }

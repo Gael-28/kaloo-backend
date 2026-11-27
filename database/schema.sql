@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS lost_items (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     description TEXT NOT NULL DEFAULT '',
+    color TEXT,
     image_base64 TEXT,
     date_found DATE,
     status TEXT NOT NULL DEFAULT 'ENCONTRADO'

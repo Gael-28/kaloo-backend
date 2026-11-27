@@ -10,7 +10,7 @@ import io.ktor.server.application.*
 import io.ktor.server.cio.*
 import io.ktor.server.engine.*
 
-/** Módulo principal usado por application.yaml y por testApplication. */
+/** MOdulo principal usado por application.yaml y por testApplication. */
 fun Application.module() {
     configureDatabase()
     configureHttp()

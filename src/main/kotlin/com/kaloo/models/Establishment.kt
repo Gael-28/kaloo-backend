@@ -3,7 +3,7 @@ package com.kaloo.models
 import kotlinx.serialization.Serializable
 
 // --- Modelo del establecimiento ---
-// En este apartado se visualizará y gestionará la información del establecimiento
+// En este apartado se visualizarA y gestionarA la informaciOn del establecimiento
 @Serializable
 data class Establishment(
     val name: String,
@@ -12,7 +12,7 @@ data class Establishment(
     val email: String,
     val openingHours: String,
     val description: String? = null,
-    // Rama "Objetos perdidos": teléfono del gerente para checar cosas perdidas
+    // Rama "Objetos perdidos": telEfono del gerente para checar cosas perdidas
     val managerName: String = "",
     val managerPhone: String = "",
     val lostAndFoundNote: String? = null
@@ -25,15 +25,24 @@ data class AdminPanelResponse(
     val establishment: Establishment
 )
 
-// --- Rama "Objetos perdidos" (pública para el cliente) ---
+// --- Rama "Objetos perdidos" (pUblica para el cliente) ---
 @Serializable
 data class LostItem(
-    val id: Int,
+    val id: Int = 0,
     val name: String,
     val description: String = "",
+    val color: String? = null,
     val imageBase64: String? = null, // imagen en base64 (ej. pixelada B/N)
     val dateFound: String? = null,
     val status: String = "ENCONTRADO" // ENCONTRADO / ENTREGADO
+)
+
+@Serializable
+data class LostItemRequest(
+    val name: String,
+    val description: String = "",
+    val color: String? = null,
+    val imageBase64: String? = null
 )
 
 @Serializable

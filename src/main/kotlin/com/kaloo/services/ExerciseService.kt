@@ -3,7 +3,7 @@ package com.kaloo.services
 import com.kaloo.models.ExerciseRequest
 import com.kaloo.models.ExerciseResponse
 
-/** Recomendación de ejercicios según objetivo (placeholder de la IA). */
+/** RecomendaciOn de ejercicios segUn objetivo (placeholder de la IA). */
 object ExerciseService {
 
     fun recommend(request: ExerciseRequest): ExerciseResponse {
@@ -24,7 +24,7 @@ object ExerciseService {
             else -> listOf(
                 "Calentamiento articular - 10 minutos",
                 "Circuito general fullbody - 3 series x 12 reps",
-                "Estiramientos estáticos - 10 minutos"
+                "Estiramientos estAticos - 10 minutos"
             )
         }
         return ExerciseResponse(goal = request.goal, routine = routine)
